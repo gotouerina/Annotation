@@ -1,10 +1,6 @@
 #! /usr/bin/perl
 # Linux System Repeat Annotation Scripts for Animal
 use File::Path;
-mkpath("01.RepeatMasker");
-mkpath("02.RepeatModeler");
-mkpath("03.TRF");
-mkpath("04.EDTA");
 use strict;
 use warnings;
 my $genome = shift;
@@ -15,6 +11,10 @@ open O1, "> 01.RepeatMasker/masker.sh" or die "Usage: perl $0 $genome $prefix";
 open O2, "> 02.RepeatModeler/modeler.sh" or die "Usage: perl $0 $genome $prefix";
 open O3, "> 03.TRF/trf.sh" or die "Usage: perl $0 $genome $prefix";
 open O4, "> 04.EDTA/edta.sh" or die "Usage: perl $0 $genome $prefix";
+mkpath("01.RepeatMasker");
+mkpath("02.RepeatModeler");
+mkpath("03.TRF");
+mkpath("04.EDTA");
 system("cd 01.RepeatMasker/; ln -s ../$genome ");
 system("cd 02.RepeatModeler/; ln -s ../$genome");
 system("cd  03.TRF; ln -s ../$genome");
