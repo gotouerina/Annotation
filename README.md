@@ -7,4 +7,4 @@
 
 ##    Download and Help
     wget https://github.com/gotouerina/RepeatElements/releases/download/v1.0/RepeatAnnotation
-    ./RepeatAnnotation
+    ./RepeatAnnotation $genome $prefix
