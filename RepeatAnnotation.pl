@@ -27,8 +27,3 @@ close O1;
 close O2;
 close O3;
 close O4;
-# Next, Merge the Gff file and 
-# cat *.gff > all.gff
-# sortBed -i all.gff > all.sort.gff
-# bedtools merge -i all.sort.gff > all.mask.bed
-# bedtools maskfasta -fi $genome  -bed all.mask.bed -soft -fo $prefix.softmask.fasta
