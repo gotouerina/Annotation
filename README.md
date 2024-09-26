@@ -26,3 +26,7 @@ Then
 ## 03.RepeatMasker
 
     RepeatMasker Parascalops.v3.fa  -lib recalss.families.fa -e rmblast -xsmall -s -gff -pa 20
+
+## 从头注释
+
+cat genescan.gff3 | perl -F'\t' -alne '$_ =~ m/(-.*)\s+genscan/; s/$1//g; print' >  rename.genescan.gff3 
