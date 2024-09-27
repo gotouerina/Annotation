@@ -1,4 +1,4 @@
-# RepeatElements
+# RepeatElements Annotation
 
 ## 01. Repeatmoderer
 
@@ -27,6 +27,49 @@ Then
 
     RepeatMasker Parascalops.v3.fa  -lib recalss.families.fa -e rmblast -xsmall -s -gff -pa 20
 
-## 从头注释
+# Denovo Prediction
 
-cat genescan.gff3 | perl -F'\t' -alne '$_ =~ m/(-.*)\s+genscan/; s/$1//g; print' >  rename.genescan.gff3 
+##   01.Augustus
+
+        mkdir fa-split; cd fa-split
+        ln -s /path/to/$soft_mask
+        perl split.pl $soft_mask && rm $soft_mask
+        for i in fa-split/*.fa; do echo -e "/data/00/software/augustus/augustus-3.3.3/bin/augustus --softmasking=1 --species=human  $i > $i.out" >> augustus.sh; done #submit to slurm
+        for i in fa-split/*.out; do echo -e "perl /data/01/user157/utils/ConvertFormat_augustus.pl $i  $i.gff" >> augustus2.sh ; done #submit to slurm
+
+##    02.GlimmerHmm
+
+        for i in fa-split/*.fa; do echo -e "/data/00/software/GlimmerHMM/GlimmerHMM/bin/glimmerhmm_linux_x86_64   $i  -d /data/00/software/Gl2/software/genscan/HumanIso.simmerHMM/GlimmerHMM/trained_dir/human    -g  -o $i.gff" >> glimmerhmm.sh; done
+        cat fa-split/*.gff > glimmerhmm.gff3
+        perl /data/01/user203/project/guohuai/03.gene_predict/utils/ConvertFormat_glimmerhmm.pl  glimmerhmm.gff3 glimmerhmm.final.gff3
+        
+##    03.GenScan
+
+        perl split_genescan.pl $soft_mask
+        for i in genscan_temp/*.fa; do echo -e " /data/00/user/user112/software/genscan/genscan /data/00/user/user112/software/genscan/HumanIso.smat   $i > $i.genescan "  >> genscan.sh; done #submit to slurm
+        for i in genscan_temp/*.genescan; do echo -e "perl  /data/01/user194/yxj/shutu/yxj/01annotion/jiaoben/ConvertFormat_genscan.pl $i > $i.gff" >> genscan2.sh; done #submit to slurm
+        cat genscan_temp/*.gff > genescan.raw.gff3
+        cat genescan.raw.gff3 | perl -F'\t' -alne '$_ =~ m/(-.*)\s+genscan/; s/$1//g; print' >  genescan.final.gff3 
+
+# Homology Prediction
+
+         source /data/00/user/user157/miniconda3/bin/activate ; conda activate GeMoMa
+         java -jar -Xmx80g /data/00/user/user157/miniconda3/envs/GeMoMa/share/gemoma-1.7.1-0/GeMoMa-1.7.1.jar CLI GeMoMaPipeline threads=40  t=$soft_mask   s=own  g=$ref.fasta  a=$ref.prefix   outdir=$out_dir     AnnotationFinalizer.r=NO tblastn=false  ## do this for at least three species!
+
+
+# Transcript Prediction
+
+        /data/00/software/hisat/hisat2-2.1.0/hisat2-build $soft_mask $index
+        /data/00/software/hisat/hisat2-2.1.0/hisat2 --dta -p 20 -x $index -1 $R1.fq.gz  -2 $R2.fq.gz  | /data/00/software/samtools/samtools-1.15.1/samtools  sort -@ 10 >  trans.bam
+        /data/00/software/stringtie/stringtie-2.2.1/stringtie -p 10 -o merged.gtf trans.bam
+        /data/00/software/TransDecoder/TransDecoder-TransDecoder-v5.5.0/util/gtf_to_alignment_gff3.pl merged.gtf > transcripts.gff3
+        /data/00/software/TransDecoder/TransDecoder-TransDecoder-v5.5.0/util/gtf_genome_to_cdna_fasta.pl merged.gtf  $soft_mask  > transcripts.fasta
+        /data/00/software/TransDecoder/TransDecoder-TransDecoder-v5.5.0/TransDecoder.LongOrfs -t transcripts.fasta
+        /data/00/software/TransDecoder/TransDecoder-TransDecoder-v5.5.0/TransDecoder.Predict -t trafnscripts.fasta
+        /data/00/software/TransDecoder/TransDecoder-TransDecoder-v5.5.0/util/cdna_alignment_orf_to_genome_orf.pl transcripts.fasta.transdecoder.gff3  transcripts.gff3   transcripts.fasta  > transcripts.fasta.transdecoder.genome.gff3
+
+
+#    EvidenceModerler Merge
+
+                
+
