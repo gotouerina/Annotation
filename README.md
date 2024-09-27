@@ -36,6 +36,7 @@ Then
         perl split.pl $soft_mask && rm $soft_mask
         for i in fa-split/*.fa; do echo -e "/data/00/software/augustus/augustus-3.3.3/bin/augustus --softmasking=1 --species=human  $i > $i.out" >> augustus.sh; done #submit to slurm
         for i in fa-split/*.out; do echo -e "perl /data/01/user157/utils/ConvertFormat_augustus.pl $i  $i.gff" >> augustus2.sh ; done #submit to slurm
+        cat fa-split/*.gff > augustus.gff3
 
 ##    02.GlimmerHmm
 
@@ -55,6 +56,8 @@ Then
 
          source /data/00/user/user157/miniconda3/bin/activate ; conda activate GeMoMa
          java -jar -Xmx80g /data/00/user/user157/miniconda3/envs/GeMoMa/share/gemoma-1.7.1-0/GeMoMa-1.7.1.jar CLI GeMoMaPipeline threads=40  t=$soft_mask   s=own  g=$ref.fasta  a=$ref.prefix   outdir=$out_dir     AnnotationFinalizer.r=NO tblastn=false  ## do this for at least three species!
+         cd  $out_dir
+         perl /data/01/user203/project/guohuai/03.gene_predict/utils/ConvertFormat_GeMoMa.pl  final_annotation.gff
 
 
 # Transcript Prediction
@@ -71,5 +74,13 @@ Then
 
 #    EvidenceModerler Merge
 
+        cat transcripts.fasta.transdecoder.genome.gff3 genescan.final.gff3  glimmerhmm.final.gff3 augustus.gff3 > denovo.gff3
+        cat $out_dir1/final_annotation.gff.for.evm  $out_dir2/final_annotation.gff.for.evm $out_dir3/final_annotation.gff.for.evm > homology.gff3
+        /data/01/user214/RepeatWork/10.annotation/GSmole/08.EVM/EVidenceModeler-v2.1.0/EVidenceModeler  --genome $mask_soft.fasta  --sample_id $prefix  --gene_predictions denovo.gff3 --protein_alignments homology.gff3    --transcript_alignments transcripts.gff3    --segmentSize 100000   --overlapSize 10000 --cpu 20 --weights weights.txt
+
+#    Function Annotation
+
+        diamond blastp -q $prefix.EVM.pep   -d uniprot_sprot.dmnd  -o diamond_output --evalue 1e-05  -p 10 --max-target-seqs 1
+        
                 
 
