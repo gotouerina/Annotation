@@ -21,11 +21,15 @@ Then
     mkdir Un_rnd
     python3 /data/01/p1/user192/software/DeepTE/DeepTE.py -d working_ltr -o Un_ltr -i ltr_unknown.fa -sp M -m_dir /data/01/user214/RepeatWork/10.annotation/Parascalops/Metazoans_model  -fam LTR
     python3 /data/01/p1/user192/software/DeepTE/DeepTE.py -d working_rnd -o Un_rnd -i rnd_unknown.fa -sp M -m_dir /data/01/user214/RepeatWork/10.annotation/Parascalops/Metazoans_model 
+
+    cd Un_Ltr; perl reclass.pl opt_DeepTE.fasta > ltr.fasta
+    cd Un_rnd; perl reclass.pl opt_DeepTE.fasta > rnd.fasta
+    cat Un_rnd/rnd.fasta Un_Ltr/ltr.fasta known.fa > recalss.families.fa
     
 
 ## 03.RepeatMasker
 
-    RepeatMasker Parascalops.v3.fa  -lib recalss.families.fa -e rmblast -xsmall -s -gff -pa 20
+    RepeatMasker $fasta -lib recalss.families.fa -e rmblast -xsmall -s -gff -pa 20
 
 # Denovo Prediction
 
