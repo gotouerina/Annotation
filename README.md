@@ -75,6 +75,15 @@ Then
         /data/00/software/TransDecoder/TransDecoder-TransDecoder-v5.5.0/TransDecoder.Predict -t trafnscripts.fasta
         /data/00/software/TransDecoder/TransDecoder-TransDecoder-v5.5.0/util/cdna_alignment_orf_to_genome_orf.pl transcripts.fasta.transdecoder.gff3  transcripts.gff3   transcripts.fasta  > transcripts.fasta.transdecoder.genome.gff3
 
+And Pasapipeline is needed to be used for annotation 
+
+        $PASAHOME/bin/seqclean  transcripts.fasta
+        $PASAHOME/Launch_PASA_pipeline.pl \
+           -c alignAssembly.config -C -R -g genome.fasta \
+           -t all_transcripts.fasta.clean -T -u all_transcripts.fasta \
+            --ALIGNERS blat,gmap --CPU 10
+        And sample_mydb_pasa.pasa_assemblies.gff3 would be used in annotation
+
 
 #    EvidenceModerler Merge
 
