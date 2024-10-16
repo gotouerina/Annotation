@@ -89,7 +89,7 @@ And Pasapipeline is needed to be used for annotation
 
         cat transcripts.fasta.transdecoder.genome.gff3 genescan.final.gff3  glimmerhmm.final.gff3 augustus.gff3 > denovo.gff3
         cat $out_dir1/final_annotation.gff.for.evm  $out_dir2/final_annotation.gff.for.evm $out_dir3/final_annotation.gff.for.evm > homology.gff3
-        /data/01/user214/RepeatWork/10.annotation/GSmole/08.EVM/EVidenceModeler-v2.1.0/EVidenceModeler  --genome $mask_soft.fasta  --sample_id $prefix  --gene_predictions denovo.gff3 --protein_alignments homology.gff3    --transcript_alignments transcripts.gff3    --segmentSize 100000   --overlapSize 10000 --cpu 20 --weights weights.txt
+        /data/01/user214/RepeatWork/10.annotation/GSmole/08.EVM/EVidenceModeler-v2.1.0/EVidenceModeler  --genome $mask_soft.fasta  --sample_id $prefix  --gene_predictions denovo.gff3 --protein_alignments homology.gff3    --transcript_alignments transcripts.gff3   --segmentSize 1000000   --overlapSize 100000 --cpu 20 --weights weights.txt
 
 #    Function Annotation
 
