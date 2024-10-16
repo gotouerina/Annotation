@@ -42,7 +42,7 @@ Then
         for i in fa-split/*.out; do echo -e "perl /data/01/user157/utils/ConvertFormat_augustus.pl $i  $i.gff" >> augustus2.sh ; done #submit to slurm
         cat fa-split/*.gff > augustus.gff3
 
-##    02.GlimmerHmm
+##    02.GlimmerHmm (if you annotate animal genome, please ignore this step)
 
         for i in fa-split/*.fa; do echo -e "/data/00/software/GlimmerHMM/GlimmerHMM/bin/glimmerhmm_linux_x86_64   $i  -d /data/00/software/Gl2/software/genscan/HumanIso.simmerHMM/GlimmerHMM/trained_dir/human    -g  -o $i.gff" >> glimmerhmm.sh; done
         cat fa-split/*.gff > glimmerhmm.gff3
