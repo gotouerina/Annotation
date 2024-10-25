@@ -1,4 +1,4 @@
-PROTEIN	GeMoMa	2
+PROTEIN	GeMoMa	3
 TRANSCRIPT	assembler-myDB.sqlite	10
 OTHER_PREDICTION	transdecoder	5
 ABINITIO_PREDICTION	augustus	1
