@@ -50,7 +50,7 @@ Then
         
 ##    03.GenScan
 
-        perl split_genescan.pl $soft_mask
+        perl split_genescan.pl $soft_mask  genscan_temp 3000000
         for i in genscan_temp/*.fa; do echo -e " /data/00/user/user112/software/genscan/genscan /data/00/user/user112/software/genscan/HumanIso.smat   $i > $i.genescan "  >> genscan.sh; done #submit to slurm
         for i in genscan_temp/*.genescan; do echo -e "perl  /data/01/user194/yxj/shutu/yxj/01annotion/jiaoben/ConvertFormat_genscan.pl $i > $i.gff" >> genscan2.sh; done #submit to slurm
         cat genscan_temp/*.gff > genescan.raw.gff3
